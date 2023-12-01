@@ -1,0 +1,77 @@
+@extends('layouts.app')
+
+@section('content')
+    <div style="margin-top: 1rem" class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 style="margin-bottom: .5rem; ">Quản Lý Danh Mục: </h3>
+                    </div>
+                    @if ($errors->any())
+                        <div class="alert alert-danger" style="padding: 0.75rem 2.25rem; margin-bottom: 0">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    <div class="card-body">
+                        @if (session('status'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('status') }}
+                            </div>
+                        @endif
+                        @if (!isset($category))
+                            {!! Form::open(['route' => 'category.store', 'method' => 'POST']) !!}
+                        @else
+                            {!! Form::open(['route' => ['category.update', $category->id], 'method' => 'PUT']) !!}
+                        @endif
+
+                        <div class="form-group">
+                            {!! Form::label('title', 'Tiêu Đề', []) !!}
+                            {!! Form::text('title', isset($category) ? $category->title : '', [
+                                'class' => 'form-control',
+                                'placeholder' => 'Nhập dữ liệu....',
+                                'id' => 'slug',
+                                'onkeyup' => 'ChangeToSlug()',
+                            ]) !!}
+                        </div>
+
+                        <div class="form-group">
+                            {!! Form::label('slug', 'Slug', []) !!}
+                            {!! Form::text('slug', isset($category) ? $category->slug : '', [
+                                'class' => 'form-control',
+                                'placeholder' => 'Nhập dữ liệu....',
+                                'id' => 'convert_slug',
+                            ]) !!}
+                        </div>
+
+                        <div class="form-group">
+                            {!! Form::label('description', 'Mô Tả', []) !!}
+                            {!! Form::textarea('description', isset($category) ? $category->description : '', [
+                                'class' => 'form-control',
+                                'placeholder' => 'Nhập dữ liệu....',
+                                'id' => 'description',
+                                'style' => 'resize: none',
+                            ]) !!}
+                        </div>
+                        <div class="form-group">
+                            {!! Form::label('Active', 'Nổi Bật', []) !!}
+                            {!! Form::select('status', ['1' => 'Hiển thị', '2' => 'Không'], isset($category) ? $category->status : '', [
+                                'class' => 'form-control',
+                            ]) !!}
+                        </div>
+                        @if (!isset($category))
+                            {!! Form::submit('Thêm dữ liệu', ['class' => 'btn btn-success']) !!}
+                        @else
+                            {!! Form::submit('Cập Nhật', ['class' => 'btn btn-success']) !!}
+                        @endif
+                        {!! Form::close() !!}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
